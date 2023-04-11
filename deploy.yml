@@ -1,0 +1,21 @@
+# ansible deployment file
+#
+# Assumptions:
+#   deployment from git repo
+#   anywhere on the intenet
+#   keys already exist on SAGA and NIRD
+#
+
+NIRD PATH GOES HERE
+
+SAGA PATH GOES HERE
+
+for all the hosts used
+
+copy shell script 1
+
+copy shell script 2
+
+install NIRD crontab to run once a week, every monday at 2am
+
+install SAGA crontab to run once a week, every monday at 5am
