@@ -6,39 +6,47 @@
 #   keys already exist on SAGA and NIRD
 #
 
-for all the hosts used
+---
+-
+  name: Install and configure GalaxyProject on NREC for NVI
+  hosts: all
+  remote_user: georgmar
+  become: no
+  tasks:
 
-# copy shell script 
-- name: Copy file with owner and permissions
-  ansible.builtin.copy:
-    src: /home/gmarselis/src/nird_quota/quota.sh
-    dest: /cluster/home/georgmar/quota.sh
-    mode: '0755'
-  if hostname is "login-5.saga"
+  -
+    name: get the username running the deploy
+    become: false
+    local_action: command whoami
+    register: username_on_the_host
 
-# install NIRD crontab to run once a week, every monday at 4:55am
+  # copy quota.sh to SAGA
+  - name: Copy file with owner and permissions
+    ansible.builtin.copy:
+      src: /home/gmarselis/src/nird_quota/quota.sh
+      dest: /cluster/home/georgmar/quota.sh
+      mode: '0755'
+    when: "'login-5.saga' in inventory_hostname"
 
-- name: crontabs on NIRD and SAGA
-  ansible.builtin.cron:
-    name: "run dusage on nird and fill /nird/projects/nird/NS9305K/nird_quota"
-    minute: "55"
-    hour: "04"
-    weekday: "mon"
-    job: "/usr/local/bin/dusage -p NS9305K > /nird/projects/NS9305K/nird_quota"
-    backup: true
-    disabled: false
-  if hostname is "login0-nird-lmd.nird.login.svc.cluster.local"
+  # install NIRD crontab to run once a week, every monday at 4:55am
+  - name: "crontab on nird"
+    ansible.builtin.cron:
+      name: "run dusage on nird and fill /nird/projects/nird/NS9305K/nird_quota"
+      minute: "55"
+      hour: "04"
+      weekday: "mon"
+      job: "/usr/local/bin/dusage -p NS9305K > /nird/projects/NS9305K/nird_quota"
+      backup: true
+      disabled: false
+    when: "'login0-nird-lmd.nird.login.svc.cluster.local' in inventory_hostname"
 
-  ansible.builtin.cron:
-    name: "run quota.sh script every Monday at 5am and email everybody the results"
-    minute: "0"
-    hour: "05"
-    weekday: "mon"
-    job: "/cluster/home/georgmar/quota.sh"
-    backup: true
-    disabled: false
-  if hostname is "login-5.saga"
-
-
-  # install SAGA crontab to run once a week, every monday at 5am
-    if hostname is "login-5.saga"
+  - name: "crontab on saga"
+    ansible.builtin.cron:
+      name: "run quota.sh script every Monday at 5am and email everybody the results"
+      minute: "00"
+      hour: "05"
+      weekday: "mon"
+      job: "/cluster/home/georgmar/quota.sh"
+      backup: true
+      disabled: false
+    when: "'login-5.saga' in inventory_hostname"
