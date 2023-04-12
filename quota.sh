@@ -13,7 +13,8 @@ saga_quota=$(   echo ${dusage_output} |  grep nn9305k | awk '{ print $5 }' )
 # Login to login1-nird-trd by sshing to georgmar@login-trd.nird.sigma2.no . If you don't hit login1-nird-trd, logout and
 # re-try. use crontab -l / crontab -e for details
 #
-# Every monday morning at 00:00 ${NAME_AND_LOCATION_OF_SCRIPT} runs  on login1-nird-trd . It fills in the file used here
+# Every monday morning at 04:00 "dusage -p NS9305K" runs  on loginr0-nird-trd . Output is saved to /nird/projects/NS9305K/nird_quota
+# # 0 4 * * 1 dusage -p NS9305K > /nird/projects/NS9305K/nird_quota
 #
 nird_tb_used=$( cat /nird/projects/nird/NS9305K/nird_quota | grep NS9305K | grep Disk | awk '{ print $5 }' | sed 's/TB//' )
 nird_quota=$(   cat /nird/projects/nird/NS9305K/nird_quota | grep NS9305K | grep Disk | awk '{ print $6 }' | sed 's/TB//' )
