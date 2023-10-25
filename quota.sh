@@ -23,10 +23,10 @@ nird_quota=$(   cat /nird/projects/nird/NS9305K/nird_quota | grep NS9305K | grep
 
 if [[ -z ${saga_tb_used} ]]
 then
-    saga_percentage="  *** saga_percentage var is empty, check dusage on loging-5.saga! ***  "
+    saga_percentage="  *** saga_percentage var is empty, check dusage on login-3.saga! ***  "
 elif [[ -z ${saga_quota} ]]
 then
-    saga_percentage="  *** saga_quota var is empty, check dusage on login-5.saga! ***  "
+    saga_percentage="  *** saga_quota var is empty, check dusage on login-3.saga! ***  "
 fi
 saga_percentage=$( echo "${saga_tb_used}*100/${saga_quota}" | bc )
 
